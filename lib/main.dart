@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart' as intl;
 
 void main() {
   runApp(MyApp());
@@ -97,9 +98,12 @@ const List<Choice> choices = const <Choice>[
 ];
 
 class ChoiceCard extends StatelessWidget {
-  const ChoiceCard({Key key, this.choice}) : super(key: key);
+  ChoiceCard({Key key, this.choice})
+      : now = DateTime.now(),
+        super(key: key);
 
   final Choice choice;
+  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
@@ -125,59 +129,145 @@ class ChoiceCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Card(
-                    child: Icon(Icons.arrow_back, size: 64),
-                  ),
-                  Padding(padding: EdgeInsets.only(right: 5)),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "Днiпро",
-                        style: TextStyle(fontWeight: FontWeight.w400),
-                      ),
-                      Text(
-                        "КП Днiпровський електротранспорт ДМР",
-                        style: TextStyle(fontWeight: FontWeight.w400),
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Text(
-                            "Series",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              color: Colors.grey[700],
-                            ),
-                          ),
-                          Padding(padding: EdgeInsets.only(right: 5)),
-                          Text(
-                            "730039290",
-                            style: TextStyle(fontWeight: FontWeight.w400),
-                          ),
-                        ],
-                      )
-                    ],
-                  )
-                ],
+              _buildUpperRow(),
+              _buildWagonAndCentralIcon(),
+              Container(
+                margin: EdgeInsets.only(top: 18, bottom: 9),
+                child: _buildLowerRow(),
               ),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Card(child: Icon(Icons.arrow_back, size: 128)),
-                  Padding(padding: EdgeInsets.only(top: 15)),
-                  Text("№1364",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 34
-                      )),
+                  Text(
+                    "One-time ticket",
+                    style: TextStyle(
+                      color: Colors.greenAccent,
+                      fontSize: 10,
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(bottom: 12)),
+                  Text(
+                    "59:48",
+                    style: TextStyle(
+                      color: Colors.greenAccent,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 24,
+                    ),
+                  ),
                 ],
-              ),
+              )
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLowerRow() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(left: 19),
+          child: _buildLowerRowElement(
+              "Date", intl.DateFormat("dd.MM.yyyy").format(now)),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 47),
+          child:
+              _buildLowerRowElement("Time", intl.DateFormat.Hms().format(now)),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 62),
+          child: _buildLowerRowElement("Standard", "1 pcs."),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLowerRowElement(String topText, String bottomTextWidget) {
+    return Column(
+      children: <Widget>[
+        Text(topText,
+            style: TextStyle(
+              fontWeight: FontWeight.w400,
+              color: Colors.grey[700],
+              fontSize: 12,
+            )),
+        Text(
+          bottomTextWidget,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUpperRow() {
+    return Row(
+      children: <Widget>[
+        Card(
+          child: Icon(Icons.arrow_back, size: 64),
+        ),
+        Padding(padding: EdgeInsets.only(right: 5)),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Днiпро",
+              style: TextStyle(fontWeight: FontWeight.w400),
+            ),
+            Text(
+              "КП Днiпровський електротранспорт ДМР",
+              style: TextStyle(fontWeight: FontWeight.w400),
+            ),
+            Row(
+              children: <Widget>[
+                Text(
+                  "Series",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                Padding(padding: EdgeInsets.only(right: 5)),
+                Text(
+                  "730039290",
+                  style: TextStyle(fontWeight: FontWeight.w400),
+                ),
+              ],
+            )
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget _buildWagonAndCentralIcon() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Card(child: Icon(Icons.arrow_back, size: 128)),
+        Padding(padding: EdgeInsets.only(top: 15)),
+        Text(
+          "№1364",
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 34,
+          ),
+        ),
+        Padding(padding: EdgeInsets.only(top: 3)),
+        Text(
+          "Wagon",
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            color: Colors.grey[700],
+            fontSize: 12,
+          ),
+        ),
+      ],
     );
   }
 }
