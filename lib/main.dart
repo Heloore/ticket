@@ -5,6 +5,10 @@ import 'package:flutter/services.dart';
 void main() {
   runApp(MaterialApp(
     home: InmediateScreen(),
+    theme: ThemeData(
+      primaryColor: greenColor,
+      accentColor: greenColor,
+    ),
     debugShowCheckedModeBanner: false,
   ));
 }
@@ -19,6 +23,7 @@ class InmediateScreen extends StatefulWidget {
 
 class _InmediateScreenState extends State<InmediateScreen> {
   int val = 1384;
+  int count = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,11 +42,22 @@ class _InmediateScreenState extends State<InmediateScreen> {
               },
             ),
           ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 50),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: "СУДА ПИШИ кол-во билетов",
+              ),
+              onChanged: (value) {
+                count = int.tryParse(value);
+              },
+            ),
+          ),
           RaisedButton(
             child: Text("Хуй"),
             onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => MyApp(val)));
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => MyApp(val, count)));
             },
           ),
         ],
@@ -51,8 +67,9 @@ class _InmediateScreenState extends State<InmediateScreen> {
 }
 
 class MyApp extends StatefulWidget {
-  MyApp(this.trainNumber);
-  final trainNumber;
+  MyApp(this.trainNumber, this.count);
+  final int trainNumber;
+  final int count;
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -81,7 +98,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         backgroundColor: Colors.white,
         titleSpacing: 10,
         title: Container(
-          margin: EdgeInsets.only(top: 25),
+          margin: EdgeInsets.only(top: 3),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -102,49 +119,80 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           ),
         ),
         bottom: MyCustomAppBar(
-          height: 64,
+          height: 48,
           child: TabBar(
             controller: tabController,
             indicatorColor: greenColor,
             indicatorSize: TabBarIndicatorSize.tab,
             isScrollable: false,
+            labelPadding: EdgeInsets.all(0),
+            labelStyle: TextStyle(color: Colors.red),
+            labelColor: greenColor,
+            unselectedLabelColor: greyColor,
             tabs: choices.map((Choice choice) {
               return Tab(
                 child: Text(
                   choice.title,
-                  style: TextStyle(color: Colors.black),
+                  // style: TextStyle(color: Colors.black),
                 ),
-                icon: Icon(choice.icon),
+                // icon: Icon(choice.icon),
               );
             }).toList(),
           ),
         ),
       ),
-      body: Container(
-        padding: EdgeInsets.only(top: 4, left: 4, right: 4),
-        child: TabBarView(
-          controller: tabController,
-          children: choices.map((Choice choice) {
-            if (choice.title == 'TRAVEL PASS') {
-              return SingleChildScrollView(
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Text("No regular tickets"),
-                ),
-              );
-            }
-            return ListView(
+      body: TabBarView(
+        physics: ScrollPhysics(),
+        controller: tabController,
+        children: choices.map((Choice choice) {
+          if (choice.title == 'TRAVEL PASS') {
+            // return SingleChildScrollView(
+            //   child: Container(
+            //     alignment: Alignment.center,
+            //     child: Text("No regular tickets"),
+            //   ),
+            // );
+            return Container(
+              padding: EdgeInsets.only(left: 4, right: 4, top: 4),
+              child: Flex(
+                direction: Axis.vertical,
+                children: <Widget>[
+                  Card(
+                    color: Color.fromRGBO(255, 239, 239, 1),
+                    child: Image.asset("images/reg_pass.png"),
+            //     Image(
+            //   image: AssetImage('images/price_logo.png'),
+            //   height: 124,
+            //   width: 124,
+            // ),
+                  ),
+                ],
+              ),
+            );
+          }
+          return Container(
+            padding: EdgeInsets.only(left: 4, right: 4, top: 4),
+            child: ListView(
               children: <Widget>[
                 ChoiceCard(
-                    choice: choice,
-                    isActive: true,
-                    trainNumber: widget.trainNumber),
+                  choice: choice,
+                  isActive: true,
+                  trainNumber: widget.trainNumber,
+                  count: widget.count,
+                  time: DateTime.now(),
+                ),
                 Padding(padding: EdgeInsets.only(top: 5)),
-                ChoiceCard(choice: choice, trainNumber: widget.trainNumber),
+                ChoiceCard(
+                  choice: choice,
+                  trainNumber: 1248,
+                  count: 1,
+                  time: DateTime(2020, DateTime.now().month,
+                      DateTime.now().day - 1, 10, 12, 38),
+                ),
               ],
-            );
-          }).toList(),
-        ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }

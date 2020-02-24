@@ -17,30 +17,45 @@ const List<Choice> choices = const <Choice>[
 ];
 
 class ChoiceCard extends StatefulWidget {
-  ChoiceCard({Key key, this.choice, this.isActive = false, this.trainNumber})
-      : ticketSeries = _generateTicketSeries(),
+  ChoiceCard({
+    Key key,
+    @required this.choice,
+    this.isActive = false,
+    @required this.trainNumber,
+    @required this.count,
+    @required this.time,
+  })  : ticketSeries = _generateTicketSeries(count),
         super(key: key);
 
   final Choice choice;
   final bool isActive;
   final int trainNumber;
-  final String ticketSeries;
+  final int count;
+  final List<String> ticketSeries;
+  final DateTime time;
 
-  static String _generateTicketSeries() {
-    String result = "";
+  static int a;
+
+  static List<String> _generateTicketSeries(int count) {
+    List<String> result = [];
     var rng = new Random();
-    for (var i = 0; i < 9; i++) {
-      result += rng.nextInt(10).toString();
+    for (var j = 0; j < count; j++) {
+      String res = "";
+      for (var i = 0; i < 9; i++) {
+        res += rng.nextInt(10).toString();
+      }
+      result.add(res);
     }
+
     return result;
   }
 
   @override
-  _ChoiceCardState createState() => _ChoiceCardState();
+  _ChoiceCardState createState() => _ChoiceCardState(time);
 }
 
-class _ChoiceCardState extends State<ChoiceCard> {
-  static final DateTime now = DateTime.now();
+class _ChoiceCardState extends State<ChoiceCard> with AutomaticKeepAliveClientMixin{
+  final DateTime time;
   Timer timer;
 
   bool isActive;
@@ -50,6 +65,11 @@ class _ChoiceCardState extends State<ChoiceCard> {
 
   Duration hour = Duration(hours: 1);
   String timerString = "";
+
+  _ChoiceCardState(this.time);
+
+  @override
+  bool wantKeepAlive = true;
 
   @override
   void initState() {
@@ -83,6 +103,7 @@ class _ChoiceCardState extends State<ChoiceCard> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     // final TextStyle textStyle = Theme.of(context).textTheme.display1;
     return Flex(
       direction: Axis.vertical,
@@ -106,7 +127,7 @@ class _ChoiceCardState extends State<ChoiceCard> {
             //   color: Colors.grey,
             //   backgroundBlendMode: BlendMode.saturation,
             // ),
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 13),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -161,16 +182,16 @@ class _ChoiceCardState extends State<ChoiceCard> {
         Container(
           margin: EdgeInsets.only(left: 19),
           child: _buildLowerRowElement(
-              "Date", intl.DateFormat("dd.MM.yyyy").format(now)),
+              "Date", intl.DateFormat("dd.MM.yyyy").format(time)),
         ),
         Container(
           margin: EdgeInsets.only(left: 47),
           child:
-              _buildLowerRowElement("Time", intl.DateFormat.Hms().format(now)),
+              _buildLowerRowElement("Time", intl.DateFormat.Hms().format(time)),
         ),
         Container(
           margin: EdgeInsets.only(left: 62),
-          child: _buildLowerRowElement("Standard", "1 pcs."),
+          child: _buildLowerRowElement("Standard", "${widget.count} pcs."),
         ),
       ],
     );
@@ -200,7 +221,7 @@ class _ChoiceCardState extends State<ChoiceCard> {
     return Row(
       children: <Widget>[
         _buildImageCard(Container(
-          padding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+          padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
           child: Image(
             image: AssetImage('images/city_emblem.png'),
             height: 64,
@@ -232,9 +253,9 @@ class _ChoiceCardState extends State<ChoiceCard> {
                     color: greyColor,
                   ),
                 ),
-                Padding(padding: EdgeInsets.only(right: 5)),
+                Padding(padding: EdgeInsets.only(right: 7)),
                 Text(
-                  widget.ticketSeries,
+                  widget.ticketSeries.join(", "),
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
                       color: isActive ? Colors.black : greyColor),
