@@ -1,8 +1,12 @@
-import 'package:clone/card.dart';
+import 'package:clone/cards/buy_ticket_container.dart';
+import 'package:clone/cards/card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:camera/camera.dart';
 
-void main() {
+List<CameraDescription> cameras = [];
+
+main() {
   runApp(MaterialApp(
     home: InmediateScreen(),
     theme: ThemeData(
@@ -23,9 +27,42 @@ class InmediateScreen extends StatefulWidget {
 
 class _InmediateScreenState extends State<InmediateScreen> {
   int val = 1384;
-  int count = 1;
+
+  CameraController controller;
+  _InmediateScreenState() {
+    getCameras();
+  }
+
+  getCameras() async {
+    cameras = await availableCameras();
+    controller = CameraController(cameras[0], ResolutionPreset.medium);
+    controller.initialize().then((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // if (!controller.value.isInitialized) {
+    //   return Container();
+    // }
+    // return AspectRatio(
+    //     aspectRatio: controller?.value?.aspectRatio,
+    //     child: CameraPreview(controller));
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -42,23 +79,16 @@ class _InmediateScreenState extends State<InmediateScreen> {
               },
             ),
           ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 50),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "СУДА ПИШИ кол-во билетов",
-              ),
-              onChanged: (value) {
-                count = int.tryParse(value);
-              },
-            ),
-          ),
           RaisedButton(
             child: Text("Хуй"),
             onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => MyApp(val, count)));
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => MyApp(val)));
             },
+          ),
+          RaisedButton(
+            child: Text("Хуй2"),
+            onPressed: () {},
           ),
         ],
       ),
@@ -67,9 +97,8 @@ class _InmediateScreenState extends State<InmediateScreen> {
 }
 
 class MyApp extends StatefulWidget {
-  MyApp(this.trainNumber, this.count);
+  MyApp(this.trainNumber);
   final int trainNumber;
-  final int count;
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -77,6 +106,9 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   TabController tabController;
+
+  bool isTicketBought = false;
+  int numberOfTicketBought = 1;
 
   @override
   void initState() {
@@ -88,8 +120,6 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      // statusBarIconBrightness: Brightness.dark,
-      // statusBarBrightness: Brightness.dark,
     ));
     return Scaffold(
       appBar: AppBar(
@@ -102,13 +132,18 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Icon(
-                Icons.arrow_back,
-                color: greyColor,
+              GestureDetector(
+                child: Icon(
+                  Icons.arrow_back,
+                  color: greyColor,
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
               ),
               Padding(padding: EdgeInsets.symmetric(horizontal: 10)),
               Text(
-                'Fares paid',
+                isTicketBought ? 'Fares paid' : 'Fare payment',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 24,
@@ -126,7 +161,6 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
             indicatorSize: TabBarIndicatorSize.tab,
             isScrollable: false,
             labelPadding: EdgeInsets.all(0),
-            labelStyle: TextStyle(color: Colors.red),
             labelColor: greenColor,
             unselectedLabelColor: greyColor,
             tabs: choices.map((Choice choice) {
@@ -142,16 +176,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         ),
       ),
       body: TabBarView(
-        physics: ScrollPhysics(),
         controller: tabController,
         children: choices.map((Choice choice) {
           if (choice.title == 'TRAVEL PASS') {
-            // return SingleChildScrollView(
-            //   child: Container(
-            //     alignment: Alignment.center,
-            //     child: Text("No regular tickets"),
-            //   ),
-            // );
             return Container(
               padding: EdgeInsets.only(left: 4, right: 4, top: 4),
               child: Flex(
@@ -160,40 +187,77 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                   Card(
                     color: Color.fromRGBO(255, 239, 239, 1),
                     child: Image.asset("images/reg_pass.png"),
-            //     Image(
-            //   image: AssetImage('images/price_logo.png'),
-            //   height: 124,
-            //   width: 124,
-            // ),
                   ),
                 ],
               ),
             );
+          } else if (choice.title == 'TICKET') {
+            if (!isTicketBought) {
+              return BuyTicketCard(
+                numberOfTickets: numberOfTicketBought,
+                callBack: (int val) {
+                  numberOfTicketBought = val;
+                },
+              );
+            }
+            return Container(
+              padding: EdgeInsets.only(left: 4, right: 4, top: 4),
+              child: ListView(
+                children: <Widget>[
+                  ChoiceCard(
+                    choice: choice,
+                    isActive: true,
+                    trainNumber: widget.trainNumber,
+                    count: numberOfTicketBought,
+                    time: DateTime.now(),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 5)),
+                  ChoiceCard(
+                    choice: choice,
+                    trainNumber: 1248,
+                    count: 1,
+                    time: DateTime(2020, DateTime.now().month,
+                        DateTime.now().day - 1, 10, 12, 38),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return Container();
           }
-          return Container(
-            padding: EdgeInsets.only(left: 4, right: 4, top: 4),
-            child: ListView(
-              children: <Widget>[
-                ChoiceCard(
-                  choice: choice,
-                  isActive: true,
-                  trainNumber: widget.trainNumber,
-                  count: widget.count,
-                  time: DateTime.now(),
-                ),
-                Padding(padding: EdgeInsets.only(top: 5)),
-                ChoiceCard(
-                  choice: choice,
-                  trainNumber: 1248,
-                  count: 1,
-                  time: DateTime(2020, DateTime.now().month,
-                      DateTime.now().day - 1, 10, 12, 38),
-                ),
-              ],
-            ),
-          );
         }).toList(),
       ),
+      bottomNavigationBar: !isTicketBought
+          ? Container(
+              decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                BoxShadow(
+                  color: Colors.grey[200],
+                  blurRadius: 5.0, // soften the shadow
+                  offset: Offset(
+                    0.0,
+                    -1.0,
+                  ),
+                ),
+              ]),
+              padding: EdgeInsets.symmetric(horizontal: 3),
+              child: RaisedButton(
+                child: Text(
+                  "Buy",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                color: greenColor,
+                onPressed: () {
+                  setState(() {
+                    isTicketBought = true;
+                  });
+                },
+              ),
+            )
+          : null,
     );
   }
 }
