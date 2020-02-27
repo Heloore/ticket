@@ -4,7 +4,8 @@ class BuyTicketCard extends StatefulWidget {
   final Function(int number) callBack;
   final int numberOfTickets;
 
-  const BuyTicketCard({Key key, this.callBack, this.numberOfTickets}) : super(key: key);
+  const BuyTicketCard({Key key, this.callBack, this.numberOfTickets})
+      : super(key: key);
 
   @override
   _BuyTicketCardState createState() => _BuyTicketCardState();
@@ -41,120 +42,124 @@ class _BuyTicketCardState extends State<BuyTicketCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(left: 4, right: 4, top: 4),
-          child: Flex(
-            direction: Axis.vertical,
-            children: <Widget>[
-              Card(
-                child: Container(
-                  padding: EdgeInsets.only(top: 3, left: 5, right: 10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      _buildUpperRow(),
-                      _buildMiddleRow(),
-                      _buildBottomRow(),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          child: Flex(
-            direction: Axis.vertical,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    'Total payable:',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      text: "${defaultTicketValue * numberOfTickets}",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                        color: greenColor,
-                      ),
-                      children: [
-                        TextSpan(
-                          text: '.',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '00',
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
-                        ),
-                        TextSpan(
-                          text: ' UAH',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: greyColor,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
+    return Container(
+      color: Color.fromRGBO(255, 255, 255, 1),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(left: 4, right: 4, top: 4),
+            child: Flex(
+              direction: Axis.vertical,
+              children: <Widget>[
+                Card(
+                  child: Container(
+                    padding: EdgeInsets.only(top: 4, left: 5, right: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        _buildUpperRow(),
+                        _buildMiddleRow(),
+                        _buildBottomRow(),
                       ],
                     ),
                   ),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 15),
-                child: Row(
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            child: Flex(
+              direction: Axis.vertical,
+              children: <Widget>[
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      '**785 Card for payments',
+                      'Total payable:',
                       style: TextStyle(
-                        fontSize: 17,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
                         color: Colors.black,
-                        fontWeight: FontWeight.w300,
                       ),
                     ),
-                    Text(
-                      "3746.26 UAH",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(right: 10),
-                      child: Icon(
-                        Icons.arrow_drop_down,
-                        color: greyColor,
+                    RichText(
+                      text: TextSpan(
+                        text: "${defaultTicketValue * numberOfTickets}",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                          color: greenColor,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: '.',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          TextSpan(
+                            text: '00',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          TextSpan(
+                            text: ' UAH',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: greyColor,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: greyColor)),
+                Container(
+                  margin: EdgeInsets.only(top: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        '**785 Card for payments',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      Container(padding: EdgeInsets.only(left: 5)),
+                      Text(
+                        "3746.26 UAH",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Icon(
+                          Icons.arrow_drop_down,
+                          color: greyColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: greyColor)),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -170,7 +175,7 @@ class _BuyTicketCardState extends State<BuyTicketCard> {
             ),
             Text(
               "Проїзд(загальний)",
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 18),
             ),
           ],
         ),
@@ -178,18 +183,18 @@ class _BuyTicketCardState extends State<BuyTicketCard> {
           text: TextSpan(
             text: "${defaultTicketValue * numberOfTickets}",
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 16,
               color: Colors.black,
             ),
             children: [
               TextSpan(
                 text: '.00',
-                style: TextStyle(fontSize: 15),
+                style: TextStyle(fontSize: 12),
               ),
               TextSpan(
                 text: ' UAH',
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 12,
                   color: greyColor,
                 ),
               ),
@@ -202,10 +207,11 @@ class _BuyTicketCardState extends State<BuyTicketCard> {
 
   Widget _buildMiddleRow() {
     return Container(
-      padding: EdgeInsets.only(top: 10, left: 52),
+      padding: EdgeInsets.only(top: 7, left: 52),
       child: Text(
         "Number of tickets",
         style: TextStyle(
+          fontSize: 12,
           color: greyColor,
         ),
       ),
@@ -214,7 +220,7 @@ class _BuyTicketCardState extends State<BuyTicketCard> {
 
   Widget _buildBottomRow() {
     return Container(
-      padding: EdgeInsets.only(top: 10, left: 48, bottom: 10),
+      padding: EdgeInsets.only(top: 18, left: 48, bottom: 13),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -230,14 +236,14 @@ class _BuyTicketCardState extends State<BuyTicketCard> {
                     padding: EdgeInsets.only(left: 4),
                     child: Text(
                       "$numberOfTickets",
-                      style: TextStyle(color: greenColor, fontSize: 34),
+                      style: TextStyle(color: greenColor, fontSize: 32),
                     ),
                   ),
                   Container(
                     padding: EdgeInsets.only(right: 20),
                     child: Text(
                       "TICKETS",
-                      style: TextStyle(color: greyColor, fontSize: 18),
+                      style: TextStyle(color: greyColor, fontSize: 16),
                     ),
                   )
                 ],
@@ -255,7 +261,7 @@ class _BuyTicketCardState extends State<BuyTicketCard> {
                 child: Icon(
                   Icons.add_circle_outline,
                   color: greenColor,
-                  size: 28,
+                  size: 24,
                 ),
                 onTap: increment,
               ),
@@ -265,7 +271,7 @@ class _BuyTicketCardState extends State<BuyTicketCard> {
                 child: Icon(
                   Icons.remove_circle_outline,
                   color: greenColor,
-                  size: 28,
+                  size: 24,
                 ),
                 onTap: decrementTicketNumber,
               ),

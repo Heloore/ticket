@@ -30,7 +30,11 @@ class _InputTrainNumberScreenState extends State<InputTrainNumberScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+    ));
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -208,9 +212,6 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-    ));
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -257,7 +258,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
               return Tab(
                 child: Text(
                   choice.title,
-                  // style: TextStyle(color: Colors.black),
+                  style: TextStyle()
                 ),
                 // icon: Icon(choice.icon),
               );
