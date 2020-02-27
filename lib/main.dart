@@ -8,7 +8,7 @@ List<CameraDescription> cameras = [];
 
 main() {
   runApp(MaterialApp(
-    home: InmediateScreen(),
+    home: InputTrainNumberScreen(),
     theme: ThemeData(
       primaryColor: greenColor,
       accentColor: greenColor,
@@ -20,49 +20,16 @@ main() {
 const Color greenColor = Color(0xFF8dc444);
 const Color greyColor = Color(0xFF757575);
 
-class InmediateScreen extends StatefulWidget {
+class InputTrainNumberScreen extends StatefulWidget {
   @override
-  _InmediateScreenState createState() => _InmediateScreenState();
+  _InputTrainNumberScreenState createState() => _InputTrainNumberScreenState();
 }
 
-class _InmediateScreenState extends State<InmediateScreen> {
+class _InputTrainNumberScreenState extends State<InputTrainNumberScreen> {
   int val = 1384;
-
-  CameraController controller;
-  _InmediateScreenState() {
-    getCameras();
-  }
-
-  getCameras() async {
-    cameras = await availableCameras();
-    controller = CameraController(cameras[0], ResolutionPreset.medium);
-    controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    // if (!controller.value.isInitialized) {
-    //   return Container();
-    // }
-    // return AspectRatio(
-    //     aspectRatio: controller?.value?.aspectRatio,
-    //     child: CameraPreview(controller));
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -82,16 +49,139 @@ class _InmediateScreenState extends State<InmediateScreen> {
           RaisedButton(
             child: Text("Хуй"),
             onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => MyApp(val)));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => InmediateScreen(val)));
             },
-          ),
-          RaisedButton(
-            child: Text("Хуй2"),
-            onPressed: () {},
           ),
         ],
       ),
+    );
+  }
+}
+
+class InmediateScreen extends StatefulWidget {
+  final int trainNumber;
+
+  const InmediateScreen(this.trainNumber, {Key key}) : super(key: key);
+
+  @override
+  _InmediateScreenState createState() => _InmediateScreenState();
+}
+
+class _InmediateScreenState extends State<InmediateScreen> {
+  CameraController controller;
+
+  _InmediateScreenState() {
+    getCameras();
+  }
+
+  getCameras() async {
+    cameras = await availableCameras();
+    controller = CameraController(cameras[0], ResolutionPreset.medium);
+    controller.initialize().then((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        brightness: Brightness.light,
+        backgroundColor: Colors.white,
+        titleSpacing: 10,
+        title: Text(
+          'Code scanning',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ),
+      bottomNavigationBar: Image.asset("images/bottom_nav_bar.png"),
+      body: controller == null || !controller.value.isInitialized
+          ? Container()
+          : GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => MyApp(widget.trainNumber)));
+              },
+              child: Stack(
+                children: <Widget>[
+                  CameraPreview(controller),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 30),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.only(bottom: 20),
+                              child: Image.asset(
+                                "images/camera_corners.png",
+                                width: 250,
+                                height: 250,
+                              ),
+                            ),
+                            Text(
+                              "To scan a QR code, position your device so that the code is inside the frame",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.flash_off,
+                                  color: greyColor,
+                                ),
+                                width: 40,
+                                height: 40,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                ),
+                                child: Icon(
+                                  Icons.autorenew,
+                                  color: greyColor,
+                                ),
+                                width: 40,
+                                height: 40,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
     );
   }
 }

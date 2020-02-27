@@ -46,6 +46,8 @@ flutter:
    - images/city_emblem.png
    - images/price_logo.png
    - images/reg_pass.png
+   - images/bottom_nav_bar.png
+   - images/camera_corners.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
