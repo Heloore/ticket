@@ -38,7 +38,7 @@ class _InputTrainNumberScreenState extends State<InputTrainNumberScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Text("ВВеди сюда номер вагона и нажми на хуй"),
+          Text("ВВеди сюда номер вагона и нажми на ОК"),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 50),
             child: TextField(
@@ -51,10 +51,9 @@ class _InputTrainNumberScreenState extends State<InputTrainNumberScreen> {
             ),
           ),
           RaisedButton(
-            child: Text("Хуй"),
+            child: Text("ОК"),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => InmediateScreen(val)));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => InmediateScreen(val)));
             },
           ),
         ],
@@ -118,8 +117,7 @@ class _InmediateScreenState extends State<InmediateScreen> {
           ? Container()
           : GestureDetector(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MyApp(widget.trainNumber)));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyApp(widget.trainNumber)));
               },
               child: Stack(
                 children: <Widget>[
@@ -142,8 +140,7 @@ class _InmediateScreenState extends State<InmediateScreen> {
                             ),
                             Text(
                               "To scan a QR code, position your device so that the code is inside the frame",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
+                              style: TextStyle(color: Colors.white, fontSize: 15),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -256,10 +253,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
             unselectedLabelColor: greyColor,
             tabs: choices.map((Choice choice) {
               return Tab(
-                child: Text(
-                  choice.title,
-                  style: TextStyle()
-                ),
+                child: Text(choice.title, style: TextStyle()),
                 // icon: Icon(choice.icon),
               );
             }).toList(),
@@ -307,8 +301,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                     choice: choice,
                     trainNumber: 1248,
                     count: 1,
-                    time: DateTime(2020, DateTime.now().month,
-                        DateTime.now().day - 1, 10, 12, 38),
+                    time: DateTime(2020, DateTime.now().month, DateTime.now().day - 1, 10, 12, 38),
                   ),
                 ],
               ),

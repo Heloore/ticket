@@ -54,7 +54,7 @@ class ChoiceCard extends StatefulWidget {
   _ChoiceCardState createState() => _ChoiceCardState(time);
 }
 
-class _ChoiceCardState extends State<ChoiceCard> with AutomaticKeepAliveClientMixin{
+class _ChoiceCardState extends State<ChoiceCard> with AutomaticKeepAliveClientMixin {
   final DateTime time;
   Timer timer;
 
@@ -135,7 +135,7 @@ class _ChoiceCardState extends State<ChoiceCard> with AutomaticKeepAliveClientMi
                 _buildUpperRow(),
                 _buildWagonAndCentralIcon(),
                 Container(
-                  margin: EdgeInsets.only(top: 18, bottom: 9),
+                  margin: EdgeInsets.only(top: 18, bottom: 9, left: 19, right: 19),
                   child: _buildLowerRow(),
                 ),
                 Column(
@@ -175,22 +175,26 @@ class _ChoiceCardState extends State<ChoiceCard> with AutomaticKeepAliveClientMi
   }
 
   Widget _buildLowerRow() {
-    return Row(
+    return Flex(
       mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      direction: Axis.horizontal,
       children: <Widget>[
         Container(
-          margin: EdgeInsets.only(left: 19),
-          child: _buildLowerRowElement(
-              "Date", intl.DateFormat("dd.MM.yyyy").format(time)),
+          width: 90,
+          child: _buildLowerRowElement("Date", intl.DateFormat("dd.MM.yyyy").format(time)),
+        ),
+        Flexible(
+          flex: 2,
+          // margin: EdgeInsets.only(left: 47),
+          child: Container(
+            alignment: Alignment.center,
+            child: _buildLowerRowElement("Time", intl.DateFormat.Hms().format(time)),
+          ),
         ),
         Container(
-          margin: EdgeInsets.only(left: 47),
-          child:
-              _buildLowerRowElement("Time", intl.DateFormat.Hms().format(time)),
-        ),
-        Container(
-          margin: EdgeInsets.only(left: 62),
+          width: 90,
           child: _buildLowerRowElement("Standard", "${widget.count} pcs."),
         ),
       ],
@@ -208,10 +212,7 @@ class _ChoiceCardState extends State<ChoiceCard> with AutomaticKeepAliveClientMi
             )),
         Text(
           bottomTextWidget,
-          style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: isActive ? Colors.black : greyColor),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: isActive ? Colors.black : greyColor),
         ),
       ],
     );
@@ -234,15 +235,11 @@ class _ChoiceCardState extends State<ChoiceCard> with AutomaticKeepAliveClientMi
           children: <Widget>[
             Text(
               "Днiпро",
-              style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  color: isActive ? Colors.black : greyColor),
+              style: TextStyle(fontWeight: FontWeight.w400, color: isActive ? Colors.black : greyColor),
             ),
             Text(
               "КП Днiпровський електротранспорт ДМР",
-              style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  color: isActive ? Colors.black : greyColor),
+              style: TextStyle(fontWeight: FontWeight.w400, color: isActive ? Colors.black : greyColor),
             ),
             Row(
               children: <Widget>[
@@ -256,9 +253,7 @@ class _ChoiceCardState extends State<ChoiceCard> with AutomaticKeepAliveClientMi
                 Padding(padding: EdgeInsets.only(right: 7)),
                 Text(
                   widget.ticketSeries.join(", "),
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      color: isActive ? Colors.black : greyColor),
+                  style: TextStyle(fontWeight: FontWeight.w400, color: isActive ? Colors.black : greyColor),
                 ),
               ],
             )
