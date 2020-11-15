@@ -64,7 +64,7 @@ class _ChoiceCardState extends State<ChoiceCard> with AutomaticKeepAliveClientMi
   Color greyColor;
 
   Duration hour = Duration(hours: 1);
-  String timerString = "";
+  String timerString = "59:59";
 
   _ChoiceCardState(this.time);
 
@@ -104,29 +104,12 @@ class _ChoiceCardState extends State<ChoiceCard> with AutomaticKeepAliveClientMi
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    // final TextStyle textStyle = Theme.of(context).textTheme.display1;
     return Flex(
       direction: Axis.vertical,
-      // height: 408,
-      // decoration: BoxDecoration(boxShadow: [
-      // BoxShadow(
-      //   color: Colors.grey.withOpacity(.5),
-      //   blurRadius: 100.0, // soften the shadow
-      //   spreadRadius: 0.1, //extend the shadow
-      //   offset: Offset(
-      //     3.0,
-      //     1.0,
-      //   ),
-      // ),
-      // ]),
       children: <Widget>[
         Card(
           color: Colors.white,
           child: Container(
-            // foregroundDecoration: BoxDecoration(
-            //   color: Colors.grey,
-            //   backgroundBlendMode: BlendMode.saturation,
-            // ),
             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 13),
             child: Column(
               mainAxisSize: MainAxisSize.max,
@@ -187,7 +170,6 @@ class _ChoiceCardState extends State<ChoiceCard> with AutomaticKeepAliveClientMi
         ),
         Flexible(
           flex: 2,
-          // margin: EdgeInsets.only(left: 47),
           child: Container(
             alignment: Alignment.center,
             child: _buildLowerRowElement("Time", intl.DateFormat.Hms().format(time)),

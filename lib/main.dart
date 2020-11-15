@@ -1,5 +1,6 @@
 import 'package:clone/cards/buy_ticket_container.dart';
 import 'package:clone/cards/card.dart';
+import 'package:clone/screens/pass_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
@@ -33,32 +34,7 @@ class _InputTrainNumberScreenState extends State<InputTrainNumberScreen> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Text("ВВеди сюда номер вагона и нажми на ОК"),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 50),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "СУДА ПИШИ",
-              ),
-              onChanged: (value) {
-                val = int.tryParse(value);
-              },
-            ),
-          ),
-          RaisedButton(
-            child: Text("ОК"),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => InmediateScreen(val)));
-            },
-          ),
-        ],
-      ),
-    );
+    return PasswordScreen();
   }
 }
 
@@ -254,62 +230,64 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
             tabs: choices.map((Choice choice) {
               return Tab(
                 child: Text(choice.title, style: TextStyle()),
-                // icon: Icon(choice.icon),
               );
             }).toList(),
           ),
         ),
       ),
-      body: TabBarView(
-        controller: tabController,
-        children: choices.map((Choice choice) {
-          if (choice.title == 'TRAVEL PASS') {
-            return Container(
-              padding: EdgeInsets.only(left: 4, right: 4, top: 4),
-              child: Flex(
-                direction: Axis.vertical,
-                children: <Widget>[
-                  Card(
-                    color: Color.fromRGBO(255, 239, 239, 1),
-                    child: Image.asset("images/reg_pass.png"),
-                  ),
-                ],
-              ),
-            );
-          } else if (choice.title == 'TICKET') {
-            if (!isTicketBought) {
-              return BuyTicketCard(
-                numberOfTickets: numberOfTicketBought,
-                callBack: (int val) {
-                  numberOfTicketBought = val;
-                },
+      body: WillPopScope(
+        onWillPop: () async => false,
+        child: TabBarView(
+          controller: tabController,
+          children: choices.map((Choice choice) {
+            if (choice.title == 'TRAVEL PASS') {
+              return Container(
+                padding: EdgeInsets.only(left: 4, right: 4, top: 4),
+                child: Flex(
+                  direction: Axis.vertical,
+                  children: <Widget>[
+                    Card(
+                      color: Color.fromRGBO(255, 239, 239, 1),
+                      child: Image.asset("images/reg_pass.png"),
+                    ),
+                  ],
+                ),
               );
+            } else if (choice.title == 'TICKET') {
+              if (!isTicketBought) {
+                return BuyTicketCard(
+                  numberOfTickets: numberOfTicketBought,
+                  callBack: (int val) {
+                    numberOfTicketBought = val;
+                  },
+                );
+              }
+              return Container(
+                padding: EdgeInsets.only(left: 4, right: 4, top: 4),
+                child: ListView(
+                  children: <Widget>[
+                    ChoiceCard(
+                      choice: choice,
+                      isActive: true,
+                      trainNumber: widget.trainNumber,
+                      count: numberOfTicketBought,
+                      time: DateTime.now(),
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 5)),
+                    ChoiceCard(
+                      choice: choice,
+                      trainNumber: 1248,
+                      count: 1,
+                      time: DateTime(2020, DateTime.now().month, DateTime.now().day - 1, 10, 12, 38),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return Container();
             }
-            return Container(
-              padding: EdgeInsets.only(left: 4, right: 4, top: 4),
-              child: ListView(
-                children: <Widget>[
-                  ChoiceCard(
-                    choice: choice,
-                    isActive: true,
-                    trainNumber: widget.trainNumber,
-                    count: numberOfTicketBought,
-                    time: DateTime.now(),
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 5)),
-                  ChoiceCard(
-                    choice: choice,
-                    trainNumber: 1248,
-                    count: 1,
-                    time: DateTime(2020, DateTime.now().month, DateTime.now().day - 1, 10, 12, 38),
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return Container();
-          }
-        }).toList(),
+          }).toList(),
+        ),
       ),
       bottomNavigationBar: !isTicketBought
           ? Container(
