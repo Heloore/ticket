@@ -40,8 +40,10 @@ class _InputTrainNumberScreenState extends State<InputTrainNumberScreen> {
       body: Container(
           child: Center(
         child: CircularProgress(
-          size: 250,
-          strokeWidth: 8,
+          size: 65,
+          strokeWidth: 6,
+          // primaryColor: Colors.grey.withOpacity(0.3),
+          primaryColor: Colors.grey,
         ),
       )),
     );

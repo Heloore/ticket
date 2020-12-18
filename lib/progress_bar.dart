@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class CircularProgress extends StatefulWidget {
-  CircularProgress(
-      {@required this.size, this.secondaryColor = Colors.white, this.primaryColor = Colors.orange, this.lapDuration = 1000, this.strokeWidth = 5.0});
+  CircularProgress({@required this.size, this.secondaryColor = Colors.white, this.primaryColor, this.lapDuration = 1000, this.strokeWidth = 5.0});
 // 2
   final double size;
   final Color secondaryColor;
@@ -46,23 +45,23 @@ class CirclePaint extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
       ..color = primaryColor
-      ..strokeCap = StrokeCap.round
+      ..strokeCap = StrokeCap.square
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth;
 
     double startAngle = _degreeToRad(270);
     double sweepAngle = _degreeToRad(90);
 
-    double bottomRectSideSize = (size.width / (2 * math.sqrt(2))) * 0.9;
+    double bottomRectSideSize = (size.width / (2 * math.sqrt(2)));
 
     var path = Path()
-      ..moveTo(0, size.height / 2)
+      ..moveTo(0, size.height / 2.6)
       ..lineTo(0, 0)
       ..lineTo(size.width, 0)
       ..lineTo(size.width, size.height)
-      ..lineTo(size.width / 2, size.height);
+      ..lineTo(size.width / 1.6, size.height);
 
-    path.addArc(Rect.fromLTRB(size.width * -0.5, size.height / 2, size.width / 2, size.height * 1.5), startAngle, sweepAngle);
+    path.addArc(Rect.fromLTRB(size.width * -0.6, size.height / 2.6, size.width / 1.6, size.height * 1.6), startAngle, sweepAngle);
 
     canvas.drawPath(path, paint);
 
