@@ -1,5 +1,6 @@
 import 'package:clone/cards/buy_ticket_container.dart';
 import 'package:clone/cards/card.dart';
+import 'package:clone/progress_bar.dart';
 import 'package:clone/screens/pass_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,7 +35,16 @@ class _InputTrainNumberScreenState extends State<InputTrainNumberScreen> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
-    return PasswordScreen();
+    // return PasswordScreen();
+    return Scaffold(
+      body: Container(
+          child: Center(
+        child: CircularProgress(
+          size: 250,
+          strokeWidth: 8,
+        ),
+      )),
+    );
   }
 }
 
